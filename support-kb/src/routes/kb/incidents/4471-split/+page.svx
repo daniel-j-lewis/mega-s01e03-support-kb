@@ -4,7 +4,7 @@ title: '#4471 · more than one problem'
 owner: Daniel Lewis
 status: closed
 reviewed: 2026-10-28
-signature: Daniel Lewis
+signature: v1.eyJzdWIiOiI0ODE0IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMyMDI3ODMsImV4cCI6MTc5MzI4OTE4M30.kcQnv4bFa_JAsqhezKZxgoCzueqbvzFqRk50bUop5Bs
 ---
 
 <script>
