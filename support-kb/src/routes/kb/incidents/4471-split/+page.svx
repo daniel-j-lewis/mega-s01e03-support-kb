@@ -31,11 +31,15 @@ is not where the date was typed.
 
 ### `parser`: day-first dates read month first
 
+Ticket: [#1](https://github.com/daniel-j-lewis/mega-s01e03-support-kb/issues/1)
+
 Every tenant on file writes the day first. The shared parser reads month first, so day and month
 swap whenever the day is 12 or less: 7 April goes out as 4 July. This is the bug #4471 names.
 Fixed: the parser now reads dd/mm for these locales.
 
 ### `hint`: the booking-v3 form asks for `MM/DD/YYYY`
+
+Ticket: [#2](https://github.com/daniel-j-lewis/mega-s01e03-support-kb/issues/2)
 
 booking-v3 prints `MM/DD/YYYY` under its date field. People at day-first tenants type what the hint
 says, and the form reads it the tenant's way. The date is swapped before any parser sees it, so the
