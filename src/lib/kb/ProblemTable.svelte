@@ -2,19 +2,19 @@
   import reports from '#lib/data/reports-4471.json';
   import notes from '#lib/data/desk-notes.json';
   import split from '#lib/data/split-4471.json';
-  import type { Report } from '#lib/kb/causes';
+  import { groupByCause, readAs, uniqueById, type CauseGroup, type Report } from '#lib/kb/causes';
   import { tenantOf } from '#lib/kb/locales';
-  import { splitTicket, type Problem } from '#lib/kb/problems';
 
+  // One row per cause, each with the ticket that now carries it (split-4471.json).
   let { ticket }: { ticket: number } = $props();
 
-  const groups = $derived(splitTicket(reports as Report[], ticket, tenantOf, notes.oneDayMove));
-  const total = $derived(groups.reduce((n, g) => n + g.reports.length, 0));
-  const issue = (p: Problem) => (split.issues as Partial<Record<Problem, number>>)[p];
+  const merged = $derived(uniqueById(reports as Report[]).filter((r) => r.mergedInto === ticket));
+  const groups = $derived(groupByCause(merged, tenantOf));
+  const issue = (c: CauseGroup['cause']) => (split.issues as Partial<Record<CauseGroup['cause'], number>>)[c];
 </script>
 
 <p class="sum">
-  <strong>{total}</strong> reports merged into #{ticket} ·
+  <strong>{merged.length}</strong> reports merged into #{ticket} ·
   <strong>{groups.length}</strong>
   {groups.length === 1 ? 'problem' : 'problems'}
 </p>
@@ -24,10 +24,10 @@
     <tr><th>problem</th><th>reports</th><th>tenants</th><th>seen</th><th>ticket</th></tr>
   </thead>
   <tbody>
-    {#each groups as g (g.problem)}
-      {@const n = issue(g.problem)}
+    {#each groups as g (g.cause)}
+      {@const n = issue(g.cause)}
       <tr class:open={!n}>
-        <td><code>{g.problem}</code></td>
+        <td><code>{g.cause}</code></td>
         <td>{g.reports.length}</td>
         <td>{g.tenants}</td>
         <td>{g.firstSeen} → {g.lastSeen}</td>
@@ -37,8 +37,16 @@
   </tbody>
 </table>
 
+{#each groups as g (g.cause)}
+  {@const moved = readAs(g, notes.oneDayMove)}
+  {#if moved}
+    <p class="note">{moved} of the <code>{g.cause}</code> reports read as a one-day move; their tenant places them under <code>{g.cause}</code>.</p>
+  {/if}
+{/each}
+
 <style>
   .sum { font-size: 1.1rem; }
+  .note { color: var(--muted); font-size: 0.85em; }
   .open td { background: var(--warn-bg); }
   .open td:last-child { color: var(--warn); font-weight: 600; }
 </style>
