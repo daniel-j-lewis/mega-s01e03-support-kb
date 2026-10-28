@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 · more than one problem'
 owner: Dan Lewis
-status: open
+status: closed
 reviewed: 2026-10-28
 signature: Dan Lewis
 ---
@@ -13,11 +13,12 @@ signature: Dan Lewis
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
 
-[#4471](/kb/incidents/4471) is marked known, with one fix queued. Its reports describe different
-problems. The queued parser fix closes `parser` only; `hint` keeps coming in after it ships.
+[#4471](/kb/incidents/4471) was marked known, with one fix queued. Its reports describe different
+problems, and each got its own ticket. Engineering has closed #4471: the parser fix shipped, and
+the booking-v3 form that caused `hint` is retired, so that ticket closes as won't fix.
 
-<Callout kind="warn">
-Not one issue. Each problem below has its own ticket, and the parser fix covers only the <code>parser</code> row.
+<Callout>
+Not one issue. Each problem below had its own ticket and its own outcome; the parser fix covered only the <code>parser</code> row.
 </Callout>
 
 ## The problems
@@ -31,15 +32,16 @@ is not where the date was typed.
 ### `parser`: day-first dates read month first
 
 Every tenant on file writes the day first. The shared parser reads month first, so day and month
-swap whenever the day is 12 or less: 7 April goes out as 4 July. This is the bug #4471 names, and
-the fix that is queued.
+swap whenever the day is 12 or less: 7 April goes out as 4 July. This is the bug #4471 names.
+Fixed: the parser now reads dd/mm for these locales.
 
 ### `hint`: the booking-v3 form asks for `MM/DD/YYYY`
 
 booking-v3 prints `MM/DD/YYYY` under its date field. People at day-first tenants type what the hint
 says, and the form reads it the tenant's way. The date is swapped before any parser sees it, so the
-parser fix does not help. Fix the hint (or use a date picker). These reports came in through the
-form at booking-v3 tenants.
+parser fix does not help. These reports came in through the form at booking-v3 tenants. Won't fix:
+the booking-v3 form is retired, which removes the hint with it. A report like this from now on means
+a tenant is still on that form.
 
 ### Reports that read as a one-day move
 

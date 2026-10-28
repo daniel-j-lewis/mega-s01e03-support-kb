@@ -10,7 +10,8 @@
 
   const merged = $derived(uniqueById(reports as Report[]).filter((r) => r.mergedInto === ticket));
   const groups = $derived(groupByCause(merged, tenantOf));
-  const issue = (c: CauseGroup['cause']) => (split.issues as Partial<Record<CauseGroup['cause'], number>>)[c];
+  type Ticket = { number: number; outcome: string; by: string };
+  const issue = (c: CauseGroup['cause']) => (split.issues as Partial<Record<CauseGroup['cause'], Ticket>>)[c];
 </script>
 
 <p class="sum">
@@ -21,17 +22,18 @@
 
 <table>
   <thead>
-    <tr><th>problem</th><th>reports</th><th>tenants</th><th>seen</th><th>ticket</th></tr>
+    <tr><th>problem</th><th>reports</th><th>tenants</th><th>seen</th><th>ticket</th><th>outcome</th></tr>
   </thead>
   <tbody>
     {#each groups as g (g.cause)}
-      {@const n = issue(g.cause)}
-      <tr class:open={!n}>
+      {@const t = issue(g.cause)}
+      <tr class:open={!t}>
         <td><code>{g.cause}</code></td>
         <td>{g.reports.length}</td>
         <td>{g.tenants}</td>
         <td>{g.firstSeen} → {g.lastSeen}</td>
-        <td>{#if n}<a href="{split.repo}/issues/{n}">#{n}</a>{:else}none yet{/if}</td>
+        <td>{#if t}<a href="{split.repo}/issues/{t.number}">#{t.number}</a>{:else}none yet{/if}</td>
+        <td>{#if t}<b>{t.outcome}</b> · {t.by}{:else}open{/if}</td>
       </tr>
     {/each}
   </tbody>

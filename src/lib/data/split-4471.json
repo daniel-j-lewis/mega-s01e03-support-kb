@@ -1,7 +1,8 @@
 {
   "repo": "https://github.com/daniel-j-lewis/mega-s01e03-support-kb",
+  "closed": "2026-10-05",
   "issues": {
-    "parser": 1,
-    "hint": 2
+    "parser": { "number": 1, "outcome": "fixed", "by": "fix(dates): parse dd/mm for eu locales" },
+    "hint": { "number": 2, "outcome": "won't fix", "by": "booking-v3 form retired" }
   }
 }
