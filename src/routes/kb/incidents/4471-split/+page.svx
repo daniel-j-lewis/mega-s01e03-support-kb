@@ -1,0 +1,63 @@
+---
+layout: runbook
+title: '#4471 · more than one problem'
+owner: Dan Lewis
+status: open
+reviewed: 2026-10-28
+signature: Dan Lewis
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+[#4471](/kb/incidents/4471) is marked known, with one fix queued. Its reports describe different
+problems. The queued parser fix closes `parser` only; the others keep coming in after it ships.
+
+<Callout kind="warn">
+Not one issue. Each problem below has its own ticket, and the parser fix covers only the <code>parser</code> row.
+</Callout>
+
+## The problems
+
+<ProblemTable ticket={4471} />
+
+Each report is counted once (the export repeats some), in exactly one row. The rows are worked out
+from the tenant, not from intake's tag: intake guesses from the reporter's browser, and the browser
+is not where the date was typed.
+
+### `parser`: day-first dates read month first
+
+Every tenant on file writes the day first. The shared parser reads month first, so day and month
+swap whenever the day is 12 or less: 7 April goes out as 4 July. This is the bug #4471 names, and
+the fix that is queued.
+
+### `hint`: the booking-v3 form asks for `MM/DD/YYYY`
+
+booking-v3 prints `MM/DD/YYYY` under its date field. People at day-first tenants type what the hint
+says, and the form reads it the tenant's way. The date is swapped before any parser sees it, so the
+parser fix does not help. Fix the hint (or use a date picker). These reports came in through the
+form at booking-v3 tenants.
+
+### `one-day`: dates move by one day
+
+Some dates land a day early instead of swapped: Tuesday 12 May shows as Monday 11 May, one meeting
+is Tuesday in Lisbon and Monday in Toronto, an invite arrives before its booking. Date order cannot
+do that. Look at where a booking's date crosses time zones. The desk already marked these as one-day
+moves; the #4471 page counts them under `parser` and only footnotes them.
+
+## Why they were merged
+
+Triage merges on the subject line alone ([decision 0001](/kb/decisions/0001-dedupe-by-subject)).
+Bugs that all feel like "wrong date" share subject lines, so they merged into one ticket.
+Read the body and the tenant before merging into a ticket that has a fix queued. Changing the rule
+needs a new decision record, not an edit to 0001.
+
+## Lessons
+
+- A big ticket can be several bugs that sound the same. Count by cause, not by subject.
+- Check what a fix covers before marking a ticket known.
+
+<RenderStamp {signature} />

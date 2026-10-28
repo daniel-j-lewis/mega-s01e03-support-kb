@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="../../_app/immutable/entry/start.g39tyf9f.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/DlMqkbta.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/BzaoVulJ.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/Bf09_hau.js" rel="modulepreload">
+		<link href="../../_app/immutable/entry/app.sV11YMQT.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/E-2nbm7m.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/BuA9gQby.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/DzpwtG-x.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/BbLv6-Rs.js" rel="modulepreload">
+		<link href="../../_app/immutable/nodes/0.DKnddjZH.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/C-UtU-xg.js" rel="modulepreload">
+		<link href="../../_app/immutable/nodes/5.CV3gaK_B.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/BCvZ7YtH.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/6ALyr1k1.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/CPZf0NUZ.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/iXLSwIXB.js" rel="modulepreload">
+		<!--e2jw2j--><!----><title>#4471 · more than one problem · support kb</title>
+		<link href="../../_app/immutable/assets/runbook.BhhgOc_n.css" rel="stylesheet">
+		<link href="../../_app/immutable/assets/Callout.yLErXQDM.css" rel="stylesheet">
+		<link href="../../_app/immutable/assets/5.Ca1t4PKl.css" rel="stylesheet">
+  </head>
+  <body>
+    <div style="display: contents"><!--[--><!--[0--><!--[--><!--[--><div class="kb svelte-e2jw2j"><header><a class="crumb svelte-e2jw2j" href="/kb">support desk · kb</a> <h1 class="svelte-e2jw2j">#4471 · more than one problem</h1> <p class="meta svelte-e2jw2j"><span>owner <b>Dan Lewis</b></span> <span class="status open svelte-e2jw2j">open</span> <span class="svelte-e2jw2j">reviewed 2026-10-28 · 0 days ago</span></p></header> <!--[-1--><!--]--> <main><p><a href="/kb/incidents/4471">#4471</a> is marked known, with one fix queued. Its reports describe different
+problems. The queued parser fix closes <code>parser</code> only; the others keep coming in after it ships.</p> <aside class="warn svelte-17bri61"><!---->Not one issue. Each problem below has its own ticket, and the parser fix covers only the <code>parser</code> row.<!----></aside><!----> <h2>The problems</h2> <p class="sum svelte-1op6c6"><strong>412</strong> reports merged into #4471 · <strong>3</strong> problems</p> <table><thead><tr><th>problem</th><th>reports</th><th>tenants</th><th>seen</th><th>ticket</th></tr></thead><tbody><!--[--><tr class="svelte-1op6c6"><td class="svelte-1op6c6"><code>parser</code></td><td class="svelte-1op6c6">374</td><td class="svelte-1op6c6">11</td><td class="svelte-1op6c6">2026-04-01 → 2026-10-04</td><td class="svelte-1op6c6"><!--[0--><a href="https://github.com/daniel-j-lewis/mega-s01e03-support-kb/issues/1">#1</a><!--]--></td></tr><tr class="svelte-1op6c6"><td class="svelte-1op6c6"><code>hint</code></td><td class="svelte-1op6c6">33</td><td class="svelte-1op6c6">3</td><td class="svelte-1op6c6">2026-04-17 → 2026-09-22</td><td class="svelte-1op6c6"><!--[0--><a href="https://github.com/daniel-j-lewis/mega-s01e03-support-kb/issues/2">#2</a><!--]--></td></tr><tr class="svelte-1op6c6"><td class="svelte-1op6c6"><code>one-day</code></td><td class="svelte-1op6c6">5</td><td class="svelte-1op6c6">5</td><td class="svelte-1op6c6">2026-04-02 → 2026-10-04</td><td class="svelte-1op6c6"><!--[0--><a href="https://github.com/daniel-j-lewis/mega-s01e03-support-kb/issues/3">#3</a><!--]--></td></tr><!--]--></tbody></table><!----> <p>Each report is counted once (the export repeats some), in exactly one row. The rows are worked out
+from the tenant, not from intake’s tag: intake guesses from the reporter’s browser, and the browser
+is not where the date was typed.</p> <h3><code>parser</code>: day-first dates read month first</h3> <p>Every tenant on file writes the day first. The shared parser reads month first, so day and month
+swap whenever the day is 12 or less: 7 April goes out as 4 July. This is the bug #4471 names, and
+the fix that is queued.</p> <h3><code>hint</code>: the booking-v3 form asks for <code>MM/DD/YYYY</code></h3> <p>booking-v3 prints <code>MM/DD/YYYY</code> under its date field. People at day-first tenants type what the hint
+says, and the form reads it the tenant’s way. The date is swapped before any parser sees it, so the
+parser fix does not help. Fix the hint (or use a date picker). These reports came in through the
+form at booking-v3 tenants.</p> <h3><code>one-day</code>: dates move by one day</h3> <p>Some dates land a day early instead of swapped: Tuesday 12 May shows as Monday 11 May, one meeting
+is Tuesday in Lisbon and Monday in Toronto, an invite arrives before its booking. Date order cannot
+do that. Look at where a booking’s date crosses time zones. The desk already marked these as one-day
+moves; the #4471 page counts them under <code>parser</code> and only footnotes them.</p> <h2>Why they were merged</h2> <p>Triage merges on the subject line alone (<a href="/kb/decisions/0001-dedupe-by-subject">decision 0001</a>).
+Bugs that all feel like “wrong date” share subject lines, so they merged into one ticket.
+Read the body and the tenant before merging into a ticket that has a fix queued. Changing the rule
+needs a new decision record, not an edit to 0001.</p> <h2>Lessons</h2> <ul><li>A big ticket can be several bugs that sound the same. Count by cause, not by subject.</li> <li>Check what a fix covers before marking a ticket known.</li></ul> <!--[0--><p class="stamp svelte-1280m42">desk ref <b class="svelte-1280m42">DR-YY1H-GK40</b></p><!--]--><!----><!----></main> <footer class="svelte-e2jw2j">Pages are written by people. Tables and charts are built from data at render time.</footer></div><!--]--><!----><!--]--><!--]--> <!--[-1--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_427mfw = {
+						base: new URL("../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../../_app/immutable/entry/start.g39tyf9f.js"),
+						import("../../_app/immutable/entry/app.sV11YMQT.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 5],
+							data: [null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>
